@@ -5,6 +5,7 @@ import React from 'react';
 
 import UserContextProvider from './src/contexts/UserContext';
 import Routes from './src/router';
+import Tabroutes from './src/tabroutes';
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
       <NavigationContainer>
         <StatusBar style="light" backgroundColor="#000" translucent={true} />
         <Routes />
+        {/*<Tabroutes />*/}
       </NavigationContainer>
     </UserContextProvider>
 

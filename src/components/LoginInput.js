@@ -12,9 +12,27 @@ align-items: center;
 margin-bottom: 15px;
 `;
 
-export default () => {
+const Input = styled.TextInput`
+flex:1;
+font-size: 14px;
+color: #000;
+margin-left: 12px;
+
+
+`;
+
+export default ({IconSvg, placeholder, value, password}) => {
   return(
-    <InputArea></InputArea>
+    <InputArea>
+        <IconSvg width="22" height="22" fill="#aa94d3" />
+        <Input 
+        placeholder={placeholder}
+        placeholderTextColor="#aa99d3"
+        
+        secureTextEntry={password}
+        
+        />
+    </InputArea>
 
   );
 }
