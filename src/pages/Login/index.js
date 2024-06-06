@@ -35,6 +35,13 @@ export default () => {
 
   }
 
+  const handleButtonClick = () => {
+    navigation.reset({
+      routes: [{name: 'Tabroutes'}]
+    })
+
+  }
+
  
 
   const handleSignClick = async () => {
@@ -70,6 +77,11 @@ export default () => {
         <SignMessageButtonText>Ainda não tem uma conta?</SignMessageButtonText>
         <SignMessageButtonTextBold>Realize seu cadastro</SignMessageButtonTextBold>
       </SignMessageButton>
+
+      <SignMessageButton onPress={handleButtonClick}>
+        <SignMessageButtonText>Home</SignMessageButtonText>
+      </SignMessageButton>
+
 
       
 

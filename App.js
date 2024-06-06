@@ -5,15 +5,13 @@ import React from 'react';
 
 import UserContextProvider from './src/contexts/UserContext';
 import Routes from './src/router';
-import Tabroutes from './src/tabroutes';
+
 
 export default function App() {
   return (
     <UserContextProvider>
       <NavigationContainer>
-        <StatusBar style="light" backgroundColor="#000" translucent={true} />
         <Routes />
-        {/*<Tabroutes />*/}
       </NavigationContainer>
     </UserContextProvider>
 
@@ -21,11 +19,3 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
