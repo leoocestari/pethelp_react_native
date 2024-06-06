@@ -45,8 +45,8 @@ export default () => {
  
 
   const handleSignClick = async () => {
-    let req = await Api.Login('','')
-    let a = 1;
+    let req = await Api.Login(emailField,passwordField)
+    console.log(req)
   }
 
 
@@ -58,7 +58,7 @@ export default () => {
         <LoginInput 
         IconSvg={EmailIcon}
         placeholder="Digite seu Email"
-        value={passwordField}
+        value={emailField}
         />
         
         <LoginInput 

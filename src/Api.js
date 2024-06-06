@@ -6,30 +6,22 @@ export default {
   },
 
   Login: async(email, password) => {
-    try {
-      const response = await fetch(`${BASE_API}/odata/animal`, {
+      const response = await fetch(`${BASE_API}/login`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         },
-        // body: JSON.stringify({
-        //   email: email,
-        //   password: password
-        // })
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        console.log(response);
       }
 
-      const json = await response.json();
-      console.log(json);
-      return json;
-
-    } catch (error) {
-      console.log('There has been a problem with your fetch operation: ' + error.message);
-      throw error;
-    }
+      return await response.json();
   }
 }

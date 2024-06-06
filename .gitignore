@@ -33,3 +33,5 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+.vs/VSWorkspaceState.json
+.vs/PetHelp/v17/.wsuo
