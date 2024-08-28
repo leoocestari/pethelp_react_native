@@ -7,8 +7,10 @@ import Home from './pages/home';
 const Tab = createBottomTabNavigator();
 
 export default () => (
-  <Tab.Navigator>
-    <Tab.Screen name="home" component={Home} />
+  <Tab.Navigator screenOptions={({route}) => {
+    tabBarIcon
+  }}>
+    <Tab.Screen name="home" component={Home}/>
     <Tab.Screen name="Search" component={Home} />
     <Tab.Screen name="Add" component={Home} />
     <Tab.Screen name="Calendar" component={Home} />

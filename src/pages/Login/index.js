@@ -9,7 +9,7 @@ import {
   SignMessageButton,
   SignMessageButtonText,
   SignMessageButtonTextBold
-  
+
 
 
 } from './styles';
@@ -19,7 +19,8 @@ import LoginInput from '../../components/LoginInput';
 import Logo from '../../../assets/logo1.svg';
 import EmailIcon from '../../../assets/email.svg';
 import PasswordIcon from '../../../assets/lock.svg';
-import Api from '../../Api';
+import IdentityService from '../../Services/IdentityService';
+import { saveToken } from '../../lib/AsyncStorageSaver';
 
 export default () => {
 
@@ -28,25 +29,37 @@ export default () => {
 
   const navigation = useNavigation();
 
-  const handleMessageButtonClick = () => {
+  const handleMessageButtonClick = (value) => {
     navigation.reset({
-      routes: [{name: 'Register'}]
+      routes: [{ name: 'Register' }]
     })
-
   }
 
-  const handleButtonClick = () => {
+  const handleButtonClick = (value) => {
     navigation.reset({
-      routes: [{name: 'Tabroutes'}]
+      routes: [{ name: 'Tabroutes' }]
     })
-
   }
 
- 
+
 
   const handleSignClick = async () => {
-    let req = await Api.Login(emailField,passwordField)
-    console.log(req)
+
+    if (emailField === undefined || passwordField === undefined)
+      return;
+
+    const req = IdentityService.Login(emailField, passwordField)
+
+    if (req && req.status) {
+      return;
+    }
+
+    saveToken(req.token, req.refreshToken);
+
+    navigation.reset({
+      routes: [{ name: 'Tabroutes' }]
+    })
+
   }
 
 
@@ -55,17 +68,19 @@ export default () => {
       <Logo width="100%" height="180" />
 
       <InputArea>
-        <LoginInput 
-        IconSvg={EmailIcon}
-        placeholder="Digite seu Email"
-        value={emailField}
+        <LoginInput
+          IconSvg={EmailIcon}
+          placeholder="Digite seu Email"
+          value={emailField}
+          onChangeText={setEmailField}
         />
-        
-        <LoginInput 
-        IconSvg={PasswordIcon}
-        placeholder="Digite a senha"
-        value={passwordField}
-        password={true}
+
+        <LoginInput
+          IconSvg={PasswordIcon}
+          placeholder="Digite a senha"
+          value={passwordField}
+          password={true}
+          onChangeText={setPasswordField}
         />
 
         <CustomButton onPress={handleSignClick}>
@@ -81,12 +96,6 @@ export default () => {
       <SignMessageButton onPress={handleButtonClick}>
         <SignMessageButtonText>Home</SignMessageButtonText>
       </SignMessageButton>
-
-
-      
-
-
-
     </Container>
   );
 }

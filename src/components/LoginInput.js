@@ -22,16 +22,16 @@ margin-left: 12px;
 
 `;
 
-export default ({IconSvg, placeholder, value, password}) => {
+export default ({IconSvg, placeholder, value, password, onChangeText}) => {
   return(
     <InputArea>
         <IconSvg width="22" height="22" fill="#aa94d3" />
         <Input 
         placeholder={placeholder}
         placeholderTextColor="#aa99d3"
-        
+        value={value}
+        onChangeText={onChangeText}
         secureTextEntry={password}
-        
         />
     </InputArea>
 
