@@ -9,23 +9,24 @@ import {
   SignMessageButton,
   SignMessageButtonText,
   SignMessageButtonTextBold
-
-
-
 } from './styles';
 
-import LoginInput from '../../components/LoginInput';
-
+import { LoginInput } from '../../components/LoginInput';
 import Logo from '../../../assets/logo1.svg';
 import EmailIcon from '../../../assets/email.svg';
 import PasswordIcon from '../../../assets/lock.svg';
+import PhoneIcon from '../../../assets/phone.svg';
+import UserIcon from '../../../assets/usericon.svg';
+import { StackTypes } from '../../router';
 
 export default () => {
 
   const [emailField, setEmailField] = useState('');
   const [passwordField, setPasswordField] = useState('');
+  const [phoneField, setPhoneField] = useState('');
+  const [nameField, setNameField] = useState('');
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackTypes>();
 
   const handleMessageButtonClick = () => {
     navigation.reset({
@@ -45,21 +46,24 @@ export default () => {
 
       <InputArea>
         <LoginInput
-          IconSvg={EmailIcon}
+          IconSvg={UserIcon}
           placeholder="Digite seu Nome"
-          value={passwordField}
+          value={emailField}
+          onChangeText={setNameField}
         />
 
         <LoginInput
-          IconSvg={EmailIcon}
+          IconSvg={PhoneIcon}
           placeholder="Digite seu Telefone"
-          value={passwordField}
+          value={phoneField}
+          onChangeText={setPhoneField}
         />
 
         <LoginInput
           IconSvg={EmailIcon}
           placeholder="Digite seu Email"
           value={passwordField}
+          onChangeText={setEmailField}
         />
 
         <LoginInput
@@ -67,6 +71,7 @@ export default () => {
           placeholder="Digite a senha"
           value={passwordField}
           password={true}
+          onChangeText={setPasswordField}
         />
 
         <CustomButton onPress={handleSignClick}>

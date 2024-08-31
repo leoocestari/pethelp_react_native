@@ -5,10 +5,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
 import Logo from '../../../assets/logo1.svg';
+import { StackTypes } from '../../router';
 
 export default () => {
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackTypes>();
 
   useEffect(()=>{
     const checkToken = async () => {

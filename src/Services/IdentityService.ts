@@ -3,12 +3,12 @@ import { getToken } from "../lib/AsyncStorageSaver";
 
 const BASE_API = 'http://192.168.0.205:8080';
 
-export default {
-  checkToken: async () => {
+export class IdentityService {
+  public async checkToken() {
     // Implementação do checkToken se necessário
-  },
+  }
 
-  Login: async (email, password) => {
+  public static async Login(email: string, password: string){
     const response = await fetch(`${BASE_API}/login`, {
       method: 'POST',
       headers: {
@@ -26,9 +26,9 @@ export default {
     }
 
     return await response.json();
-  },
+  }
 
-  UserInfo: async () => {
+  public async UserInfo(){
     const token = getToken();
 
     const response = await fetch(`${BASE_API}/user`, {

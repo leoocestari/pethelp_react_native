@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
-
+import { SvgProps } from 'react-native-svg';
 
 const InputArea = styled.View`
 width: 100%;
@@ -22,10 +22,21 @@ margin-left: 12px;
 
 `;
 
-export default ({IconSvg, placeholder, value, password, onChangeText}) => {
+interface Props {
+  onChangeText: (text: string) => void
+  password?: boolean
+  IconSvg?: React.FC<SvgProps>
+  value?: string
+  placeholder?: string
+}
+
+export const LoginInput: React.FC<Props> = ({onChangeText, password, IconSvg, value, placeholder}) => {
+
+  let Svg = IconSvg ? IconSvg : () => null;
+
   return(
     <InputArea>
-        <IconSvg width="22" height="22" fill="#aa94d3" />
+        <Svg width="22" height="22" fill="#aa94d3" />
         <Input 
         placeholder={placeholder}
         placeholderTextColor="#aa99d3"
@@ -34,6 +45,5 @@ export default ({IconSvg, placeholder, value, password, onChangeText}) => {
         secureTextEntry={password}
         />
     </InputArea>
-
   );
 }

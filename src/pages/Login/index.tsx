@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native'
-import { Text } from 'react-native';
+
 import {
   Container,
   InputArea,
@@ -14,30 +12,31 @@ import {
 
 } from './styles';
 
-import LoginInput from '../../components/LoginInput';
-
-import Logo from '../../../assets/logo1.svg';
+import { saveToken } from '../../lib/AsyncStorageSaver';
+import { NavigationRouteContext, useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
+import { IdentityService } from '../../Services/IdentityService';
+import { StackTypes } from '../../router';
+import React from 'react';
+import Logo from '../../../assets/logo.svg';
 import EmailIcon from '../../../assets/email.svg';
 import PasswordIcon from '../../../assets/lock.svg';
-import IdentityService from '../../Services/IdentityService';
-import { saveToken } from '../../lib/AsyncStorageSaver';
+import { LoginInput } from '../../components/LoginInput';
 
 export default () => {
 
   const [emailField, setEmailField] = useState('');
   const [passwordField, setPasswordField] = useState('');
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackTypes>();
 
-  const handleMessageButtonClick = (value) => {
-    navigation.reset({
-      routes: [{ name: 'Register' }]
-    })
+  const handleMessageButtonClick = () => {
+    navigation.navigate('Register');
   }
 
-  const handleButtonClick = (value) => {
+  const handleButtonClick = () => {
     navigation.reset({
-      routes: [{ name: 'Tabroutes' }]
+      routes: [{ name: 'Preload' }]
     })
   }
 
@@ -48,7 +47,7 @@ export default () => {
     if (emailField === undefined || passwordField === undefined)
       return;
 
-    const req = IdentityService.Login(emailField, passwordField)
+    const req = await IdentityService.Login(emailField, passwordField)
 
     if (req && req.status) {
       return;
