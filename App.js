@@ -9,11 +9,9 @@ import Routes from './src/router';
 
 export default function App() {
   return (
-    <UserContextProvider>
-      <NavigationContainer>
-        <Routes />
-      </NavigationContainer>
-    </UserContextProvider>
+    <NavigationContainer>
+      <Routes />
+    </NavigationContainer>
 
 
   );

@@ -12,9 +12,8 @@ import {
 
 } from './styles';
 
-import { saveToken } from '../../lib/AsyncStorageSaver';
 import { NavigationRouteContext, useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { IdentityService } from '../../Services/IdentityService';
 import { StackTypes } from '../../router';
 import React from 'react';
@@ -22,6 +21,8 @@ import Logo from '../../../assets/logo.svg';
 import EmailIcon from '../../../assets/email.svg';
 import PasswordIcon from '../../../assets/lock.svg';
 import { LoginInput } from '../../components/LoginInput';
+import { AsyncStorageSaver } from '../../lib/AsyncStorageSaver';
+import { tokenContext } from '../../contexts/tokenContext';
 
 export default () => {
 
@@ -29,6 +30,8 @@ export default () => {
   const [passwordField, setPasswordField] = useState('');
 
   const navigation = useNavigation<StackTypes>();
+
+  const token = useContext(tokenContext);
 
   const handleMessageButtonClick = () => {
     navigation.navigate('Register');
@@ -47,13 +50,10 @@ export default () => {
     if (emailField === undefined || passwordField === undefined)
       return;
 
-    const req = await IdentityService.Login(emailField, passwordField)
+    const req = await IdentityService.getToken(emailField, passwordField)
 
-    if (req && req.status) {
+    if (!req)
       return;
-    }
-
-    saveToken(req.token, req.refreshToken);
 
     navigation.reset({
       routes: [{ name: 'Tabroutes' }]
