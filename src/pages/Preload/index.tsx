@@ -12,7 +12,7 @@ export default () => {
   const navigation = useNavigation<StackTypes>();
 
   useEffect(() => {
-    IdentityService.getToken().then(token => {
+    IdentityService.getToken().then(token => {      
       if (token) {
         navigation.reset({
           routes: [{ name: "Tabroutes" }],

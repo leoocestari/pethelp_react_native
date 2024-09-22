@@ -44,8 +44,8 @@ export class AsyncStorageSaver {
     public static getToken() {
         return SecureStore.getItem('token')
     }
-
-    public static async getRefreshToken() {
-        //return await AsyncStorage.getItem('refreshToken')
+    
+    public static async clearToken() {      
+        await SecureStore.deleteItemAsync('token')
     }
 }
