@@ -15,7 +15,6 @@ import {
 import { NavigationRouteContext, useNavigation } from '@react-navigation/native';
 import { useContext, useState } from 'react';
 import { IdentityService } from '../../Services/IdentityService';
-import { StackTypes } from '../../router';
 import React from 'react';
 import Logo from '../../../assets/logo.svg';
 import EmailIcon from '../../../assets/email.svg';
@@ -29,7 +28,7 @@ export default () => {
   const [emailField, setEmailField] = useState('');
   const [passwordField, setPasswordField] = useState('');
 
-  const navigation = useNavigation<StackTypes>();
+  const navigation = useNavigation<any>();
 
   const token = useContext(tokenContext);
 
@@ -46,6 +45,8 @@ export default () => {
 
 
   const handleSignClick = async () => {
+
+    AsyncStorageSaver.clearToken();
 
     if (emailField === undefined || passwordField === undefined)
       return;

@@ -1,7 +1,7 @@
 import { AsyncStorageSaver } from "../lib/AsyncStorageSaver";
 import { TokenContext } from "../contexts/tokenContext";
 
-const BASE_API = 'http://192.168.0.205:50277';
+const BASE_API = 'http://192.168.0.205:64388';
 
 export class IdentityService {
 
@@ -22,6 +22,7 @@ export class IdentityService {
     const diff = new Date().getTime() - parse.creationDate.getTime();
 
     if (diff > parse.expiresIn * 1000){      
+
       return this.processToken(await this.refreshToken(parse.refreshToken))
     }
     
@@ -29,9 +30,8 @@ export class IdentityService {
   }
 
   private static processToken(response: any): TokenContext | undefined {
-    console.log('a');
     
-    if (response?.status)
+    if (!response || response?.status)
       return;
 
     response.creationDate = new Date();
@@ -41,29 +41,36 @@ export class IdentityService {
   }
 
   public static async refreshToken(refreshToken: string) {
-    const response = await fetch(`${BASE_API}/refresh`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        refreshToken: refreshToken
-      })
-    });
 
-    const token = await response.json();
-    
-    if (!token){
+    try {
+      const response = await fetch(`${BASE_API}/refresh`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          refreshToken: refreshToken
+        })
+      });
+      
+      const token = await response.json();
+      
+      if (token.status){
+        AsyncStorageSaver.clearToken();
+        return;
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.log("Failed to request refresh token, is the server up?");
+
       AsyncStorageSaver.clearToken();
       return;
     }
-
-    return await response.json();
   }
 
   public static async Login(email: string, password: string) {
-    console.log(BASE_API + '/login');
     
     const response = await fetch(`${BASE_API}/login`, {
       method: 'POST',
@@ -76,11 +83,6 @@ export class IdentityService {
         password: password
       })
     });
-    console.log(response);
-
-    if (!response?.ok) {
-      console.log(response);
-    }
 
     return await response.json();
   }

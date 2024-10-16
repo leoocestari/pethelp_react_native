@@ -9,7 +9,7 @@ import {
   SignMessageButton,
   SignMessageButtonText,
   SignMessageButtonTextBold
-} from './styles';
+} from './home-styles';
 
 import { LoginInput } from '../../components/LoginInput';
 import Logo from '../../../assets/logo1.svg';
@@ -26,7 +26,7 @@ export default () => {
   const [phoneField, setPhoneField] = useState('');
   const [nameField, setNameField] = useState('');
 
-  const navigation = useNavigation<StackTypes>();
+  const navigation = useNavigation<any>();
 
   const handleMessageButtonClick = () => {
     navigation.reset({

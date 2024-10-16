@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Text } from "react-native";
-import { Container, LoadingIcon } from "./styles";
+import { Container, LoadingIcon } from "./preload-styles";
 import { useNavigation } from "@react-navigation/native";
 import * as SecureStore from 'expo-secure-store';
 
@@ -9,7 +9,7 @@ import { StackTypes } from "../../router";
 import { IdentityService } from "../../Services/IdentityService";
 
 export default () => {
-  const navigation = useNavigation<StackTypes>();
+  const navigation = useNavigation<any>();
 
   useEffect(() => {
     IdentityService.getToken().then(token => {      
