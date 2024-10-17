@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 3,
     flex: 1,
-    maxHeight: 'auto',
+    maxHeight: 120,
   },
   card: {
     flexDirection: 'row',

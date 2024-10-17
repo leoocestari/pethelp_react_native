@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Text } from "react-native";
 import { Container, LoadingIcon } from "./preload-styles";
 import { useNavigation } from "@react-navigation/native";
-import * as SecureStore from 'expo-secure-store';
 
 import Logo from "../../../assets/logo1.svg";
 import { StackTypes } from "../../router";
