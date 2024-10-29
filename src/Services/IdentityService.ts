@@ -1,7 +1,40 @@
-import { AsyncStorageSaver } from "../lib/AsyncStorageSaver";
-import { TokenContext } from "../contexts/tokenContext";
+import { AsyncStorageSaver } from '../lib/AsyncStorageSaver';
+import { TokenContext } from '../contexts/tokenContext';
+import axios from 'axios';
+import { navigate } from '../router'; // Adjust the import based on your navigation setup
 
-const BASE_API = 'http://192.168.0.205:64388';
+export const BASE_API = 'http://192.168.0.205:49482';
+
+export const api = axios.create({
+  baseURL: BASE_API,
+});
+
+api.interceptors.response.use(
+  response => {
+    return response
+  },
+  async error => {
+    const originalRequest = error.config;
+    
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      const tokenContext = await IdentityService.refreshToken(JSON.parse(AsyncStorageSaver.getToken()!).refreshToken);
+
+      if (tokenContext) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${tokenContext.accessToken}`;
+        originalRequest.headers['Authorization'] = `Bearer ${tokenContext.accessToken}`;
+        return axios(originalRequest);
+      } else {
+        AsyncStorageSaver.clearToken();
+        navigate('Login'); // Adjust based on your navigation setup
+      }
+    } 
+
+    return Promise.reject(error);
+  }
+);
+
 
 export class IdentityService {
 
@@ -22,7 +55,6 @@ export class IdentityService {
     const diff = new Date().getTime() - parse.creationDate.getTime();
 
     if (diff > parse.expiresIn * 1000){      
-
       return this.processToken(await this.refreshToken(parse.refreshToken))
     }
     
@@ -30,74 +62,39 @@ export class IdentityService {
   }
 
   private static processToken(response: any): TokenContext | undefined {
-    
     if (!response || response?.status)
       return;
 
-    response.creationDate = new Date();
+    const tokenContext: TokenContext = {
+      accessToken: response.accessToken,
+      refreshToken: response.refreshToken,
+      expiresIn: response.expiresIn,
+      creationDate: new Date(),
+      tokenType: response.tokenType
+    };
 
-    AsyncStorageSaver.saveToken(JSON.stringify(response));
-    return response;
+    AsyncStorageSaver.saveToken(JSON.stringify(tokenContext));
+    return tokenContext;
   }
 
-  public static async refreshToken(refreshToken: string) {
-
+  public static async Login(email: string, password: string): Promise<any> {
     try {
-      const response = await fetch(`${BASE_API}/refresh`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          refreshToken: refreshToken
-        })
-      });
-      
-      const token = await response.json();
-      
-      if (token.status){
-        AsyncStorageSaver.clearToken();
-        return;
-      }
-  
-      return await response.json();
+      const response = await api.post('/login', { email, password });
+      return response.data;
     } catch (error) {
-      console.log("Failed to request refresh token, is the server up?");
-
-      AsyncStorageSaver.clearToken();
-      return;
+      console.error('Login error:', error);
+      throw error;
     }
   }
 
-  public static async Login(email: string, password: string) {
-    
-    const response = await fetch(`${BASE_API}/login`, {
-      method: 'POST',
-      headers: {
-        'accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password
-      })
-    });
-
-    return await response.json();
-  }
-
-  public async UserInfo() {
-    const token = await AsyncStorageSaver.getToken();
-
-    const response = await fetch(`${BASE_API}/user`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'authorization': `Bearer ${token}`
-      }
-    });
-    return await response.json();
+  public static async refreshToken(refreshToken: string): Promise<any> {
+    try {
+      const response = await api.post('/refresh', { refreshToken });
+      AsyncStorageSaver.saveToken(JSON.stringify(response.data));
+      return response.data;
+    } catch (error) {
+      AsyncStorageSaver.clearToken();
+      navigate('Login'); // Adjust based on your navigation setup
+    }
   }
 }

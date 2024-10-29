@@ -1,7 +1,7 @@
 import { createContext } from "react"
 
 export type TokenContext = {
-    token: string,
+    accessToken: string,
     refreshToken: string,
     expiresIn: number,
     tokenType: string,
