@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
+import { api } from '../../Services/IdentityService'; // Ensure this is the correct path to your ApiService
 import { Picker } from '@react-native-picker/picker';
-import { api } from '../../Services/IdentityService';
+import { Clinic } from '../Clinic/models/Clinic';
 
 const AnimalRegister: React.FC = () => {
   const [name, setName] = useState('');
@@ -15,16 +17,28 @@ const AnimalRegister: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [clinics, setClinics] = useState([]);
   const [selectedClinic, setSelectedClinic] = useState('');
+  const navigation = useNavigation();
+  const route = useRoute();
+  const animal = (route.params as any)?.animal;
 
   useEffect(() => {
     fetchClinics();
-  }, []);
+    if (animal) {
+      setName(animal.Name);
+      setSpecies(animal.Species);
+      setBreed(animal.Breed);
+      setColor(animal.Color);
+      setGender(animal.Gender);
+      setTemperament(animal.Temperament);
+      setImageUri(animal.ImageUri);
+      setSelectedClinic(animal.ClinicId);
+    }
+  }, [animal]);
 
   const fetchClinics = async () => {
     try {
       const response = await api.get('oData/Clinic'); // Adjust the endpoint as needed
-      console.log('Clinics:', response.data);
-      
+      console.log('Clinics:', response.data.value);
       setClinics(response.data.value);
     } catch (error) {
       console.error('Error fetching clinics:', error);
@@ -146,8 +160,8 @@ const AnimalRegister: React.FC = () => {
         onValueChange={(itemValue) => setSelectedClinic(itemValue)}
       >
         <Picker.Item label="Select a Clinic" value="" />
-        {clinics.map((clinic: any) => (
-          <Picker.Item key={clinic.id} label={clinic.name} value={clinic.id} />
+        {clinics.map((clinic: Clinic) => (
+          <Picker.Item key={clinic.Id} label={clinic.Name} value={clinic.Id} />
         ))}
       </Picker>
       {loading ? (

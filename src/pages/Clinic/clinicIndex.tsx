@@ -1,32 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { api } from '../../Services/IdentityService'; // Ensure this is the correct path to your ApiService
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { api } from "../../Services/IdentityService"; // Ensure this is the correct path to your ApiService
+import { RefreshControl } from "react-native-gesture-handler";
+import { Clinic } from "./models/Clinic";
 
-interface Clinic {
-  Id: string;
-  Name: string;
-  Cnpj: string;
-  PhoneNumber: string;
-  Address: {
-    City: string;
-    Complement: string;
-    Country: string;
-    Neighborhood: string;
-    Number: string;
-    State: string;
-    Street: string;
-    ZipCode: string;
-  };
-}
 
 
 const ClinicCard: React.FC<{ clinic: Clinic }> = ({ clinic }) => {
   const navigation = useNavigation<any>();
-  
+
   const handlePress = () => {
-    navigation.navigate('ClinicRegister', { clinic });
-  }; 
+    navigation.navigate("ClinicRegister", { clinic });
+  };
 
   return (
     <TouchableOpacity style={styles.card} onPress={handlePress}>
@@ -39,6 +32,7 @@ const ClinicCard: React.FC<{ clinic: Clinic }> = ({ clinic }) => {
 
 const ClinicIndex: React.FC = () => {
   const [clinics, setClinics] = useState<Clinic[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation<any>();
 
   useEffect(() => {
@@ -47,16 +41,22 @@ const ClinicIndex: React.FC = () => {
 
   const fetchClinics = async () => {
     try {
-      const response = await api.get('odata/Clinic?$expand=Address'); // Adjust the endpoint as needed
+      const response = await api.get("odata/Clinic?$expand=Address"); // Adjust the endpoint as needed
       setClinics(response.data.value);
     } catch (error) {
-      console.error('Error fetching clinics:', error);
-      Alert.alert('Error', 'Failed to fetch clinics');
+      console.error("Error fetching clinics:", error);
+      Alert.alert("Error", "Failed to fetch clinics");
     }
   };
 
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchClinics();
+    setRefreshing(false);
+  };
+
   const handleAddClinic = () => {
-    navigation.navigate('ClinicRegister'); // Adjust based on your navigation setup
+    navigation.navigate("ClinicRegister"); // Adjust based on your navigation setup
   };
 
   return (
@@ -66,6 +66,9 @@ const ClinicIndex: React.FC = () => {
         keyExtractor={(item) => item.Id}
         renderItem={({ item }) => <ClinicCard clinic={item} />}
         contentContainerStyle={styles.list}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
       />
       <TouchableOpacity style={styles.addButton} onPress={handleAddClinic}>
         <Text style={styles.addButtonText}>Add Clinic</Text>
@@ -77,23 +80,23 @@ const ClinicIndex: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
     padding: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   list: {
     paddingBottom: 20,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 10,
     padding: 15,
     marginBottom: 15,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
@@ -101,22 +104,22 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
   },
   cardText: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
   addButton: {
-    backgroundColor: '#007BFF',
+    backgroundColor: "#007BFF",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 20,
   },
   addButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
   },
 });

@@ -4,18 +4,18 @@ import { Ionicons } from "@expo/vector-icons"; // Import Ionicons from the appro
 import { createDrawerNavigator } from "@react-navigation/drawer"; // Import Drawer Navigator
 
 import Home from "./pages/home/home-index";
-import AnimalRegister from "./pages/Animals/animalRegister";
-import ClinicRegister from "./pages/Clinic/clinicRegister";
-import ClinicIndex from "./pages/Clinic/clinicIndex";
 import Clinics from "./pages/Clinic/clinics";
+import Animals from "./pages/Animals/animals";
+import Adoptions from "./pages/Adoption/Adoption";
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator(); // Define Drawer Navigator
 
 export const TabNavigator = () => (
   <Drawer.Navigator>
     <Drawer.Screen name="Home" component={TabNavigatorContent} />
-    <Drawer.Screen name="Cadastro" component={AnimalRegister} />
     <Drawer.Screen name="Clinicas" component={Clinics} />
+    <Drawer.Screen name="Animals" component={Animals} />
+    <Drawer.Screen name="Adoption" component={Adoptions} />
   </Drawer.Navigator>
 );
 

@@ -3,7 +3,7 @@ import { TokenContext } from '../contexts/tokenContext';
 import axios from 'axios';
 import { navigate } from '../router'; // Adjust the import based on your navigation setup
 
-export const BASE_API = 'http://192.168.0.205:49482';
+export const BASE_API = 'http://192.168.0.205:58407';
 
 export const api = axios.create({
   baseURL: BASE_API,

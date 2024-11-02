@@ -5,15 +5,16 @@ import React from 'react';
 
 import UserContextProvider from './src/contexts/UserContext';
 import Routes from './src/router';
+import { AdoptionListProvider } from './src/contexts/AdoptionListContext';
 
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Routes />
-    </NavigationContainer>
-
-
+    <AdoptionListProvider>
+      <NavigationContainer>
+        <Routes />
+      </NavigationContainer>
+    </AdoptionListProvider>
   );
 }
 
