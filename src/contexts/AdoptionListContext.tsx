@@ -14,8 +14,12 @@ const AdoptionListContext = createContext<AdoptionListContextProps | undefined>(
 export const AdoptionListProvider: React.FC<any> = ({ children }) => {
   const [list, setList] = useState<Animal[]>([]);
 
-  const addToList = (animal: Animal) => {
+  const addToList = (animal: Animal): boolean => {
+    if(list.some(a => a.Id === animal.Id)) {
+      return true;
+    }
     setList([...list, animal]);
+    return false
   };
 
   const removeFromList = (animalId: string) => {

@@ -16,6 +16,7 @@ export const TabNavigator = () => (
     <Drawer.Screen name="Clinicas" component={Clinics} />
     <Drawer.Screen name="Animals" component={Animals} />
     <Drawer.Screen name="Adoption" component={Adoptions} />
+    <Drawer.Screen name="Staff" component={Adoptions} />
   </Drawer.Navigator>
 );
 

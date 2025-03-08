@@ -72,7 +72,7 @@ const AnimalList: React.FC = () => {
       <Text style={styles.title}>Animals</Text>
       <FlatList
         data={animals}
-        keyExtractor={(item) => item.Id}
+        keyExtractor={(item) => item.Id.toString()}
         renderItem={({ item }) => <AnimalCard animal={item} />}
         contentContainerStyle={styles.list}
         refreshControl={

@@ -9,7 +9,7 @@ import {
   SignMessageButton,
   SignMessageButtonText,
   SignMessageButtonTextBold
-} from './home-styles';
+} from './register-styles';
 
 import { LoginInput } from '../../components/LoginInput';
 import Logo from '../../../assets/logo1.svg';

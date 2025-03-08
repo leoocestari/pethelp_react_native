@@ -3,7 +3,7 @@ import { NavigationContainer, useNavigationContainerRef } from '@react-navigatio
 import { createStackNavigator } from '@react-navigation/stack';
 import Preload from './pages/Preload/preload-index';
 import Login from './pages/Login';
-import Register from './pages/Register/home-index';
+import Register from './pages/Register/register-index';
 import { TabNavigator } from './tabroutes';
 import AnimalRegister from './pages/Animals/animalRegister';
 import ClinicRegister from './pages/Clinic/clinicRegister';

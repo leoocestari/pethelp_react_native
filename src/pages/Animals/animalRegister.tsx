@@ -47,7 +47,7 @@ const AnimalRegister: React.FC = () => {
   };
 
   const handleRegister = async () => {
-    if (!name || !species || !breed || !color || !gender || !temperament || !imageUri || !selectedClinic) {
+    if (!name || !species || !breed || !color || !gender || !temperament || !selectedClinic) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
@@ -68,7 +68,7 @@ const AnimalRegister: React.FC = () => {
     try {
       const response = await api.post('/Animal/Create', animalData);
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         // Clear the form
         setName('');
         setSpecies('');

@@ -27,13 +27,27 @@ const AnimalInfo: React.FC = () => {
     }
   };
 
-  const handleSelectForAdoption = () => {
-    addToList(animal);
-    Alert.alert('Adoption', 'Animal added to adoption List');
+  const handleSelectForAdoption = async () => {
+    try {
+      await api.post(`/watched/add?key=${animal.Id}`); // Use the /watched/add endpoint
+      addToList(animal);
+      Alert.alert('Adoption', 'Animal added to adoption list');
+      navigation.navigate('AdoptionList'); // Navigate to the AdoptionList screen
+    } catch (error) {
+      Alert.alert('Error', 'Failed to add animal to adoption list');
+    }
   };
 
   const handleCreateSchedule = () => {
-    navigation.navigate('CreateSchedule', { animalId: animal.id }); // Adjust based on your navigation setup
+    navigation.navigate('CreateSchedule', { animalId: animal.Id }); // Adjust based on your navigation setup
+  };
+
+  const handleViewMedications = () => {
+    navigation.navigate('MedicationList', { animalId: animal.Id }); // Pass the animalId parameter
+  };
+
+  const handleViewVaccines = () => {
+    navigation.navigate('VaccineList', { animalId: animal.Id }); // Pass the animalId parameter
   };
 
   if (!animal) {
@@ -57,6 +71,11 @@ const AnimalInfo: React.FC = () => {
         <Button title="Select for Adoption" onPress={handleSelectForAdoption} />
         <View style={styles.buttonSpacer} />
         <Button title="Schedule a Visit" onPress={handleCreateSchedule} />
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button title="View Medications" onPress={handleViewMedications} />
+        <View style={styles.buttonSpacer} />
+        <Button title="View Vaccines" onPress={handleViewVaccines} />
       </View>
     </View>
   );

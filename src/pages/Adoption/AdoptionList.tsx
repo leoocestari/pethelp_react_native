@@ -1,13 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, Button, Alert } from 'react-native';
-import { useAdoptionList } from '../../contexts/AdoptionListContext';
 import { api } from '../../Services/IdentityService'; // Ensure this is the correct path to your ApiService
+import { useAdoptionList } from '../../contexts/AdoptionListContext';
 
 const AdoptionList: React.FC = () => {
-  const { adoptions, removeFromList, clearList } = useAdoptionList();
+  const [adoptions, setAdoptions] = useState<any[]>([]);
+  const { removeFromList, clearList } = useAdoptionList();
 
-  const handleRemoveAnimal = (animalId: string) => {
-    removeFromList(animalId);
+  useEffect(() => {
+    fetchAdoptions();
+  }, []);
+
+  const fetchAdoptions = async () => {
+    try {
+      const response = await api.get('/user/watched'); // Fetch data from /user/watched
+      setAdoptions(response.data.value);
+    } catch (error) {
+      console.error('Error fetching adoptions:', error);
+      Alert.alert('Error', 'Failed to fetch adoptions');
+    }
+  };
+
+  const handleRemoveAnimal = async (animalId: string) => {
+    try {
+      await api.put(`/watched/remove?key=${animalId}`); // Use the /watched/remove endpoint
+      removeFromList(animalId);
+      fetchAdoptions();
+    } catch (error) {
+      Alert.alert('Error', 'Failed to remove animal from adoption list');
+    }
   };
 
   const handleSubmitAdoptionRequest = async () => {
@@ -30,6 +51,7 @@ const AdoptionList: React.FC = () => {
       if (response.status === 200) {
         Alert.alert('Success', 'Adoption request submitted successfully!');
         clearList();
+        fetchAdoptions();
       } else {
         const errorData = await response.data;
         Alert.alert('Error', errorData.message || 'Failed to submit adoption request');
@@ -44,16 +66,16 @@ const AdoptionList: React.FC = () => {
       <Text style={styles.title}>Adoption List</Text>
       <FlatList
         data={adoptions}
-        keyExtractor={(item) => item.Id}
+        keyExtractor={(item) => item.Id.toString()}
         renderItem={({ item }) => (
           <View style={styles.animalCard}>
-            <Text style={styles.animalText}>{item.Name}</Text>
-            <Text style={styles.animalText}>{item.Species}</Text>
-            <Text style={styles.animalText}>{item.Breed}</Text>
-            <Text style={styles.animalText}>{item.Color}</Text>
-            <Text style={styles.animalText}>{item.Gender}</Text>
-            <Text style={styles.animalText}>{item.Temperament}</Text>
-            <Button title="Remove" onPress={() => handleRemoveAnimal(item.Id)} />
+            <Text style={styles.animalText}>Name: {item.Name}</Text>
+            <Text style={styles.animalText}>Species: {item.Species}</Text>
+            <Text style={styles.animalText}>Breed: {item.Breed}</Text>
+            <Text style={styles.animalText}>Color: {item.Color}</Text>
+            <Text style={styles.animalText}>Gender: {item.Gender}</Text>
+            <Text style={styles.animalText}>Temperament: {item.Temperament}</Text>
+            <Button title="Remove" onPress={() => handleRemoveAnimal(item.Id.toString())} />
           </View>
         )}
         contentContainerStyle={styles.list}
